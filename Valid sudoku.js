@@ -1,4 +1,4 @@
-function posidSudoku(board) {
+function isValidSudoku(board) {
     const row = new Map()
     const col = new Map()
     const square = new Map()
@@ -6,17 +6,23 @@ function posidSudoku(board) {
     for (let r=0; r<9; r++){
         for (let c=0; c<9; c++){
             let val = board[r][c]
-            let pos = `${r,c}`
 
             if (val === '.')continue;
 
             let sqrBox = `${Math.floor(r /3)}, ${Math.floor(c /3)}`
 
-            if (row.has(pos)  row.get(pos)[0] === r) return false;
-            if (col.get(val)[1] === c) return false;
-            if (square.has(sqrBox) && square.get(sqrBox)[0] == val[0] && square.get(sqrBox)[1] == val[1]) return false;
+            
+            if (row.get(r) && row.get(r).has(val)) return false;
+            if (col.get(c) &&col.get(c).has(val)) return false;
+            if (square.get(sqrBox) && square.get(sqrBox).has(val)) return false;
 
-            row.set(pos, val); col.set(pos, val); square.set(sqrBox, val)
+            if (!row.has(r)) row.set(r, new Set());
+            if (!col.has(c)) col.set(c, new Set());
+            if (!square.has(sqrBox)) square.set(sqrBox, new Set());
+
+            row.get(r).add(val)
+            col.get(c).add(val)
+            square.get(sqrBox).add(val)
         }
     }
     return true
@@ -24,20 +30,18 @@ function posidSudoku(board) {
 
 
 
-
 let board = 
-[[".","1",".","5","2",".",".",".","."],
-[".",".",".",".",".","6","4","3","."],
-[".",".",".",".",".",".",".",".","."],
-["5",".",".",".",".",".","9",".","."],
-[".",".",".",".",".",".",".","5","."],
-[".",".",".","5",".",".",".",".","."],
-["9",".",".",".",".","3",".",".","."],
-[".",".","6",".",".",".",".",".","."],
-[".",".",".",".",".",".",".",".","."]];
-
-//[5,3] [r,c]
+[["1","2",".",".","3",".",".",".","."],
+["4",".",".","5",".",".",".",".","."],
+[".","9","1",".",".",".",".",".","3"],
+["5",".",".",".","6",".",".",".","4"],
+[".",".",".","8",".","3",".",".","5"],
+["7",".",".",".","2",".",".",".","6"],
+[".",".",".",".",".",".","2",".","."],
+[".",".",".","4","1","9",".",".","8"],
+[".",".",".",".","8",".",".","7","9"]];
 
 
 
-console.log(posidSudoku(board))
+
+console.log(isValidSudoku(board))
